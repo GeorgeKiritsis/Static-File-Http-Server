@@ -58,7 +58,6 @@ httpResponse Router::getNotFoundResponse() {
 
 httpResponse Router::handlePostRequest(httpRequest request) {
     httpResponse res;
-    // Process POST data (e.g., handle form submissions, process JSON payload)
     res.status_code = 200;
     res.status_message = "OK";
     res.body = "<h1>POST request received</h1>";
@@ -75,20 +74,16 @@ httpResponse Router::route(httpRequest request) {
         path = "/index.html";  // Default to the homepage
     }
 
-    // Sanitizing the path to prevent directory traversal attacks
     if (path.find("..") != std::string::npos) {
         std::cerr << "[Router] Invalid path traversal attempt: " << path << std::endl;
         return getNotFoundResponse();
     }
 
-    // Serve files from the `Website` directory
     std::string baseDir = "Website";
     std::string fullPath = baseDir + path;
 
-    // Logging the full file path
     std::cout << "[Router] Serving file: " << fullPath << std::endl;
 
-    // Handle different HTTP methods (GET, POST, etc.)
     if (request.method == "GET") {
         return serveStaticFile(fullPath);
     } else if (request.method == "POST") {
