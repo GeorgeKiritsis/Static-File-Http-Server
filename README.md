@@ -102,28 +102,28 @@ The project consists of several key components, each encapsulated in a class:
    cd <project-directory>
 ## Build the Project
 
-```bash
-mkdir build
-cd build
-cmake ..
-make
+    ```bash
+    mkdir build
+    cd build
+    cmake ..
+    make
 
-Run the Server
+2. Run the Server
+    ```bash
+    ./HttpServer
 
-./HttpServer
-
-Access the Server
+3. Access the Server
 
 Open a web browser and navigate to:
-
-http://127.0.0.1:8080
+    ```bash
+    http://127.0.0.1:8080
 
 Future Improvements
 
-    Support for additional HTTP methods like PUT and DELETE.
-    HTTPS support for secure communication.
-    Thread-based concurrency for improved performance with high loads.
-    Configuration file support for customizable server settings.
+Support for additional HTTP methods like PUT and DELETE.
+HTTPS support for secure communication.
+Thread-based concurrency for improved performance with high loads.
+Configuration file support for customizable server settings.
 
 Conclusion
 
