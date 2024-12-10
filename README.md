@@ -115,7 +115,7 @@ The project consists of several key components, each encapsulated in a class:
 3. Access the Server
 
 Open a web browser and navigate to:
-    ```bash
+    
     http://127.0.0.1:8080
 
 Future Improvements
