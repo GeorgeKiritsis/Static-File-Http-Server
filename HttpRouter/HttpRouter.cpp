@@ -1,12 +1,7 @@
 #include "../HttpR/HttpResponse.h"
 #include "../HttpR/HttpRequest.h"
 #include "../HttpRouter/HttpRouter.h"
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <unordered_map>
-#include <ctime>
-#include <cstring>
+#include "../Utils/Utils.h"
 
 std::string Router::getFileContent(const std::string& path) {
     std::ifstream file(path, std::ios::binary);

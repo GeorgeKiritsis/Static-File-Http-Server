@@ -29,9 +29,8 @@ void HttpServer::run() {
 
     while (true) {
         FD_ZERO(&readfds);
-        FD_SET(_serverSocket, &readfds);  // Add the server socket to the set
+        FD_SET(_serverSocket, &readfds);  
 
-        // Add all active client sockets to the set
         for (int clientSocket : activeClients) {
             FD_SET(clientSocket, &readfds);
             if (clientSocket > maxFd) {
@@ -39,14 +38,12 @@ void HttpServer::run() {
             }
         }
 
-        // Wait for activity on any of the sockets
         int activity = select(maxFd + 1, &readfds, nullptr, nullptr, nullptr);
         if (activity < 0) {
             _logger.log("Error with select function: " + std::string(strerror(errno)));
             continue;
         }
 
-        // Check if there's a new connection
         if (FD_ISSET(_serverSocket, &readfds)) {
             struct sockaddr_in clientAddr;
             socklen_t clientSize = sizeof(clientAddr);
@@ -56,17 +53,14 @@ void HttpServer::run() {
                 continue;
             }
 
-            // Log the first connection and add the client to the active list
             activeClients.push_back(clientSocket);
             _logger.log("New client connected: " + std::to_string(clientSocket));
         }
 
-        // Handle all active client connections
         for (int clientSocket : activeClients) {
             if (FD_ISSET(clientSocket, &readfds)) {
                 handleClient(clientSocket);
 
-                // After handling the client, remove the socket from the active list
                 activeClients.erase(std::remove(activeClients.begin(), activeClients.end(), clientSocket), activeClients.end());
                 _logger.log("Client disconnected: " + std::to_string(clientSocket) + "\n");
             }
@@ -86,25 +80,24 @@ void HttpServer::handleClient(int clientSocket) {
         int bytesReceived = recv(clientSocket, buffer, BUFFER_SIZE, 0);
         if (bytesReceived == -1) {
             _logger.log("Error receiving message from client: " + std::string(strerror(errno)));
-            break;  // Break the loop instead of returning directly
+            break;  
         } else if (bytesReceived == 0) {
             _logger.log("Client disconnected.");
-            break;  // Break the loop on client disconnect
+            break;  
         }
 
         requestMessage.append(buffer, bytesReceived);
 
-        // Check if we have received the complete message
         if (requestMessage.find("\r\n\r\n") != std::string::npos) {
-            break;  // Full message received
+            break;  
         }
     }
 
     if (!requestMessage.empty()) {
-        auto request = decodeHttp(requestMessage, _logger);  // Decode the HTTP request
-        _logger.log("Request received: " + request.method + " " + request.path);  // Log request details
+        auto request = decodeHttp(requestMessage, _logger);  
+        _logger.log("Request received: " + request.method + " " + request.path);  
 
-        auto response = _router.route(request);  // Route the request
+        auto response = _router.route(request);  
         _logger.log("Response status: " + std::to_string(response.status_code) + " " + response.status_message);
 
         std::string responseStr = encodeResponse(response);
@@ -114,34 +107,30 @@ void HttpServer::handleClient(int clientSocket) {
         }
     }
 
-    close(clientSocket);  // Close the socket after completing communication
+    close(clientSocket);  
 }
 
 void HttpServer::initServerSocket() {
-    // Create socket
     _serverSocket = socket(AF_INET, SOCK_STREAM, 0);
     if (_serverSocket == -1) {
         _logger.log("Error creating server socket: " + std::string(strerror(errno)));
         exit(EXIT_FAILURE);
     }
 
-    // Config address
     struct sockaddr_in serverAddr;
     memset(&serverAddr, 0, sizeof(serverAddr));
-    serverAddr.sin_family = AF_INET; // Use IPv4
+    serverAddr.sin_family = AF_INET; 
     serverAddr.sin_port = htons(_port);
     if (inet_aton(_address.c_str(), &serverAddr.sin_addr) <= 0) {
         _logger.log("Error converting address: " + std::string(strerror(errno)));
         exit(EXIT_FAILURE);
     }
 
-    // Bind socket
     if (bind(_serverSocket, (struct sockaddr*)&serverAddr, sizeof(serverAddr)) == -1) {
         _logger.log("Error binding server socket: " + std::string(strerror(errno)));
         exit(EXIT_FAILURE);
     }
 
-    // Set listener
     if (listen(_serverSocket, _maxClientsCount) == -1) {
         _logger.log("Error starting listener: " + std::string(strerror(errno)));
     } else {

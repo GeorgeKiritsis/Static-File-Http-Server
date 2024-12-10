@@ -20,11 +20,11 @@ httpRequest decodeHttp(const std::string& msg, Logger& logger) {
         std::istringstream firstLine(line);
         if (!(firstLine >> request.method >> request.path >> request.version)) {
             logger.log("Error: Invalid request line format");
-            return request; // Return empty request if format is invalid
+            return request; 
         }
     } else {
         logger.log("Error: Empty request line");
-        return request; // Return empty request if no request line is found
+        return request; 
     }
 
     // Parse headers

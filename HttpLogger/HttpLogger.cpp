@@ -7,7 +7,6 @@ Logger::Logger(std::string title) : _title(title), _logToConsole(false), _logToF
 void Logger::log(std::string msg) {
     std::string formattedMessage = "[" + _title + "] " + getTimestamp() + " " + msg;
 
-    // Log to console
     if (_logToConsole) {
         std::cout << formattedMessage << std::endl;
     }
@@ -38,20 +37,19 @@ void Logger::logToFile(std::string path) {
 void Logger::logToConsole(std::string msg) {
     std::string formattedMessage = "[" + _title + "] " + getTimestamp() + " " + msg;
     _logToConsole = true;
-    std::cout << formattedMessage << std::endl;  // Print the message to the console
+    std::cout << formattedMessage << std::endl;  
 }
 
 void Logger::clientConnected() {
     if (!_isClientConnected) {
-        // If no client is currently connected, insert a blank line to separate blocks
-        log("");  // Insert a blank line for separation
+        log("");  
     }
     _isClientConnected = true;
 }
 
 void Logger::clientDisconnected() {
     if (_isClientConnected) {
-        log("");  // Insert a blank line after the client disconnects
+        log("");  
     }
     _isClientConnected = false;
 }

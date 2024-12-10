@@ -9,17 +9,17 @@ private:
     bool _logToFile;
     std::string _logFilePath;
     bool _logToConsole;
-    bool _isClientConnected;  // Track if the server is currently logging for a client
+    bool _isClientConnected;  
 
 public:
     Logger();
     Logger(std::string title);
     void log(std::string msg);
     void logToFile(std::string path);
-    void logToConsole(std::string msg);  // Now accepts a string argument
-    void clientConnected();  // Called when a client connects
-    void clientDisconnected();  // Called when a client disconnects
+    void logToConsole(std::string msg);  
+    void clientConnected();  
+    void clientDisconnected();  
 
 private:
-    std::string getTimestamp();  // Private method to get the timestamp
+    std::string getTimestamp(); 
 };
