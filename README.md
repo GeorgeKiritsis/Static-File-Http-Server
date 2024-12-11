@@ -102,10 +102,10 @@ The project consists of several key components, each encapsulated in a class:
    cd <project-directory>
 ## Build the Project
 
-    ```bash
+    
     mkdir build
     cd build
-    cmake ..
+    
     make
 
 2. Run the Server
